@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="ap" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GNSS.Controller">
+   <children>
+      <MenuBar fx:id="menuBar" prefHeight="44.0" prefWidth="183.0">
+        <menus>
+          <Menu fx:id="file" mnemonicParsing="false" text="文件">
+            <items>
+              <MenuItem fx:id="new_window" mnemonicParsing="false" onAction="#new_window" text="新建窗口" />
+                  <MenuItem fx:id="new_window1" mnemonicParsing="false" onAction="#out_files" text="导出文件" />
+                  <MenuItem fx:id="save" mnemonicParsing="false" text="保存" />
+                  <MenuItem mnemonicParsing="false" text="另存为" />
+                  <MenuItem fx:id="close_current_window" mnemonicParsing="false" onAction="#close_current_window" text="关闭当前窗口" />
+                  <MenuItem fx:id="close_all_window" mnemonicParsing="false" onAction="#close_all_window" text="关闭所有窗口" />
+            </items>
+          </Menu>
+          <Menu fx:id="edit" mnemonicParsing="false" text="视图">
+            <items>
+              <MenuItem fx:id="enlarge_screen" mnemonicParsing="false" onAction="#enlarge_screen" text="界面放大" />
+                  <MenuItem fx:id="shrink_screen" mnemonicParsing="false" onAction="#shrink_screen" text="界面缩小" />
+                  <MenuItem fx:id="full_screen" mnemonicParsing="false" onAction="#full_screen" text="全屏模式" />
+            </items>
+          </Menu>
+            <Menu fx:id="tools" mnemonicParsing="false" text="功能">
+               <items>
+                  <Menu fx:id="tools1" mnemonicParsing="false" text="BOC">
+                     <items>
+                        <Menu mnemonicParsing="false" text="时域波形">
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#boc_random_timegraph" text="k位随机码" />
+                            <MenuItem mnemonicParsing="false" onAction="#boc_user_define" text="自定义码元" />
+                          </items>
+                        </Menu>
+                        <MenuItem fx:id="boc_f" mnemonicParsing="false" onAction="#boc_power_spectrum" text="功率谱" />
+                        <MenuItem mnemonicParsing="false" onAction="#boc_self_correlation" text="自相关函数" />
+                        <MenuItem mnemonicParsing="false" onAction="#boc_four_parameters" text="计算性能参数" />
+                     </items>
+                  </Menu>
+                  <Menu fx:id="tools11" mnemonicParsing="false" text="BPSK">
+                     <items>
+                        <Menu mnemonicParsing="false" text="时域波形">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#bpsk_random_timegraph" text="k位随机码" />
+                              <MenuItem mnemonicParsing="false" onAction="#bpsk_user_define" text="自定义码元" />
+                           </items>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#bpsk_power_spectrum" text="功率谱" />
+                        <MenuItem mnemonicParsing="false" onAction="#bpsk_self_correlation" text="自相关函数" />
+                     </items>
+                  </Menu>
+                  <MenuItem mnemonicParsing="false" onAction="#bpsk_four_parameters" text="计算性能参数" />
+                  <MenuItem mnemonicParsing="false" text="比较" />
+               </items>
+            </Menu>
+            <Menu fx:id="help" mnemonicParsing="false" text="帮助">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="关于" />
+               </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <ImageView fitHeight="58.0" fitWidth="87.0" layoutX="518.0" layoutY="-2.0" opacity="0.37" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@eic.png" />
+         </image>
+      </ImageView>
+      <SplitPane fx:id="spane" dividerPositions="0.5" layoutY="58.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="337.0" prefWidth="226.0">
+               <children>
+                  <GridPane prefHeight="338.0" prefWidth="294.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.99996337890624" minWidth="10.0" prefWidth="159.99996337890624" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.60001220703126" minWidth="10.0" prefWidth="84.00003662109376" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="52.4" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="97.20000000000002" minHeight="0.0" prefHeight="40.59999389648438" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="97.20000000000002" minHeight="0.0" prefHeight="43.59998779296875" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="72.80002136230468" minHeight="10.0" prefHeight="42.600012207031256" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="84.0000213623047" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="84.0000213623047" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label prefHeight="30.0" prefWidth="110.0" text="形如BOC(α,β)" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label GridPane.rowIndex="2">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="text1" prefHeight="23.0" prefWidth="108.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label prefHeight="30.0" prefWidth="156.0" text="                         α =" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="30.0" prefWidth="158.0" text="                       β =" GridPane.rowIndex="3">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="text2" prefHeight="23.0" prefWidth="108.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label prefHeight="18.0" prefWidth="154.0" text="        随机码元位数=" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="text3" prefHeight="23.0" prefWidth="108.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label prefHeight="18.0" prefWidth="162.0" text="           自定义码元=" GridPane.rowIndex="6">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="text4" prefHeight="14.0" prefWidth="122.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label prefHeight="26.0" prefWidth="158.0" text="           高电平概率=" GridPane.rowIndex="5">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="text3a" prefHeight="23.0" prefWidth="108.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label prefHeight="26.0" prefWidth="158.0" text="              限制带宽=" GridPane.rowIndex="7">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="text5" prefHeight="23.0" prefWidth="108.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                     </children>
+                  </GridPane>
+                  <ImageView fx:id="b1" fitHeight="30.0" fitWidth="132.0" layoutX="73.0" layoutY="294.0" opacity="0.46" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                     <image>
+                        <Image url="@boc.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+          <AnchorPane prefWidth="306.0">
+               <children>
+                  <GridPane layoutX="-8.0" prefHeight="338.0" prefWidth="298.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="168.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.20001220703125" minWidth="10.0" prefWidth="32.80000000000001" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label prefHeight="30.0" prefWidth="133.0" text="  形如PSK-R(m)">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textb" prefHeight="23.0" prefWidth="123.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label prefHeight="20.0" prefWidth="182.0" text="                          m=" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="texta" prefHeight="23.0" prefWidth="116.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label prefHeight="18.0" prefWidth="191.0" text="            随机码元位数=" GridPane.rowIndex="3">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="18.0" prefWidth="215.0" text="                自定义码元=" GridPane.rowIndex="5">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textc" prefHeight="23.0" prefWidth="118.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label prefHeight="18.0" prefWidth="182.0" text="                高电平概率=" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textb1" prefHeight="23.0" prefWidth="123.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label prefHeight="20.0" prefWidth="166.0" text="  一个载波周期的码片=" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="texta1" prefHeight="23.0" prefWidth="108.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label prefHeight="26.0" prefWidth="158.0" text="                   限制带宽=" GridPane.rowIndex="6">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textc1" prefHeight="23.0" prefWidth="118.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                     </children>
+                  </GridPane>
+                  <ImageView fx:id="b2" fitHeight="42.0" fitWidth="162.0" layoutX="79.0" layoutY="289.0" opacity="0.46" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <image>
+                        <Image url="@bpsk.png" />
+                     </image>
+                  </ImageView>
+               </children></AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
