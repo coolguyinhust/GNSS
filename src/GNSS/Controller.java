@@ -1,5 +1,9 @@
 package GNSS;
 
+import function.Chart_common_usage;
+import function.Map_FiveValue_Parameters;
+import function.Picture_save;
+import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,9 +11,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import signal.BOC;
@@ -50,13 +56,20 @@ public class Controller implements Initializable{
 
     @FXML
     private AnchorPane ap;
+    @FXML
+    private AnchorPane ap1;
+    @FXML
+    private AnchorPane ap2;
 
     @FXML
     private MenuBar menuBar;
     @FXML
     private SplitPane spane;
-//    @FXML
-//    private GridPane gp;
+    @FXML
+    private GridPane gp1;
+    @FXML
+    private GridPane gp2;
+
     @FXML
     private ImageView b1;
     @FXML
@@ -83,6 +96,8 @@ public class Controller implements Initializable{
     private TextField textb1;
     @FXML
     private TextField textc;
+    @FXML
+    private TextField textc1;
     /*
      * 新建一个窗口
      */
@@ -178,6 +193,17 @@ public class Controller implements Initializable{
         }
     }
 
+    @FXML
+    public void linkweb(){
+        Application application = new Application() {
+            @Override
+            public void start(Stage primaryStage) throws Exception {
+
+            }
+        };
+        application.getHostServices().showDocument("https://coolguyinhust.github.io/");
+    }
+
     //判断整数（int）
     private boolean isInteger(String str) {
         if (null == str || "".equals(str)) {
@@ -246,6 +272,13 @@ public class Controller implements Initializable{
     }
 
     @FXML
+    public void Chart_CommonUsage(){
+        Chart_common_usage c = new Chart_common_usage();
+        TableView<Map_FiveValue_Parameters> table = c.getTable();
+        Picture_save picture_save=new Picture_save(table,"Chart_CommonUsage.png");
+    }
+
+    @FXML
     public void boc_four_parameters(){
         if(!judge_Text_valid()){
             return;
@@ -265,7 +298,18 @@ public class Controller implements Initializable{
     }
     @FXML
     public void bpsk_four_parameters(){
-
+        if(!(isInteger(texta.getText())||isDouble(texta.getText()))){
+            System.out.println("请在BPSK第一个文本输入框中请输入数字...");
+            return;
+        }
+        Integer m = Integer.parseInt(texta.getText());
+        if(!(isInteger(textc1.getText())||isDouble(textc1.getText()))){
+            System.out.println("请在BPSK第六个文本输入框中请输入带限宽度");
+            return;
+        }
+        double br = Double.parseDouble(textc1.getText());
+        BPSK bpsk_signal=new BPSK(m);
+        bpsk_signal.four_parameters();
     }
     @FXML
     public void boc_random_timegraph(){
@@ -425,6 +469,47 @@ public class Controller implements Initializable{
         BPSK bpsk_signal=new BPSK(m);
         bpsk_signal.paint_frequency();
     }
+
+    @FXML
+    public void boc_CodeTraceCN(){
+
+    }
+
+    @FXML
+    public void boc_CodeTraceBand(){
+
+    }
+
+    @FXML
+    public void boc_CodeTraceT(){
+
+    }
+    @FXML
+    public void boc_CodeTraceInterval(){
+        BOC boc_signal=new BOC(10,5);
+        boc_signal.errorInterval();
+    }
+
+    @FXML
+    public void bpsk_CodeTraceInterval(){
+        BPSK bpsk = new BPSK(10);
+        bpsk.errorInterval();
+    }
+    @FXML
+    public void bpsk_CodeTraceCN(){
+
+    }
+
+    @FXML
+    public void bpsk_CodeTraceBand(){
+
+    }
+
+    @FXML
+    public void bpsk_CodeTraceT(){
+
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         menuBar.prefWidthProperty().bind(ap.widthProperty());//宽度绑定为Pane宽度
