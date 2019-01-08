@@ -11,6 +11,10 @@ import javafx.scene.text.Font;
 
 /**
  * Created by kaixin on 2018/12/19.
+ * 该类的功能是对以下四个重要参数生成相应的表格并显示出来：（是Chart_common_usage的子集）
+ * BPSK、BOC调制信号的带限之后剩余功率、均方根（RMS）带宽rms、
+ * 频谱隔离系数（Spectral Separation Coefficient）Kls和
+ * 功率谱密度的有效矩形带宽rect等四种重要性能参数；
  */
 public class Chart_FourParas {
     private double value1;

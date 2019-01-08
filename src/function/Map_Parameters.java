@@ -4,8 +4,6 @@ import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Created by kaixin on 2018/12/20.
- */
-/*
  * Map_Parameters是为了绘制计算四个重要的参数的chart_cell
  * 作为chart的基本数据结构，相当于一个映射表，一个key(parameters_name),映射到一个value（parameters_value）
  */

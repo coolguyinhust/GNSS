@@ -7,7 +7,6 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableView;
-import javafx.stage.Stage;
 
 import java.util.Arrays;
 
@@ -129,11 +128,9 @@ public class BPSK {
      * 计算90%功率的带宽band_n，其中90％功率的带宽指对于卫星发射的带宽为30MHz的信号，通过其90％的功率所需要的带宽
      * 利用功率谱的对称性，要对band_n做积分=0.9,即从-15，到band_n/2做积分等于0.05
      * <ul>
-     *     <li>无需传入参数和返回值
-     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性
-     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）
-     *     <li>由x生成y的具体计算中，需要用到积分，这里我们用微元法，即用小矩形的面积来计算积分的值。
-     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
+     *     <li>无需传入参数
+     *      @return band which can get 90% power
+     *     <li>具体计算中，需要用到积分，这里我们用微元法，即用小矩形的面积来计算积分的值。
      * </>
      */
     public double getNinetyPercentBand(){
@@ -141,6 +138,8 @@ public class BPSK {
         double fi=-15;
         double power=0;
         double value;
+
+        //  fi+=0.005中的0.005可以看成是小矩形的宽度
         for(;fi<=15;fi+=0.005){
             value=(1/fc)* pow((Math.sin(Math.PI*fi/fc))/(Math.PI*fi/fc),2);
             power+=value*0.005;
@@ -151,7 +150,14 @@ public class BPSK {
         return 2*Math.abs(fi);
     }
 
-    //求归一化（无限带宽上功率为1）后的30MHz频带内的发送功率
+    /**
+     * 求归一化（无限带宽上功率为1）后的30MHz频带内的发送功率
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 返回对-15MHz到15MHz区域上的积分值，得到总功率以便归一化
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     private double power_sender(){
         double value;
         double power_sender=0;
@@ -162,9 +168,16 @@ public class BPSK {
         return  power_sender;
     }
 
-    //带外损失功率（dB）的定为为：
-    //- 10 Log10[带内功率（归一化的）/1]  (dB)
-    //发射带宽为30MHz,接收带宽为24MHz损失的功率
+    /**
+     * 带外损失功率（dB）的定为为：
+     * - 10 Log10[带内功率（归一化的）/1]  (dB)
+     * 发射带宽为30MHz,接收带宽为24MHz损失的功率
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 带外损失功率
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double band_loss(){
        double value;
         double power_receiver=0;
@@ -172,7 +185,6 @@ public class BPSK {
             value=(1/fc)* pow((Math.sin(Math.PI*f/fc))/(Math.PI*f/fc),2) ;
             power_receiver+=value*0.005;
         }
-
         //band_in是带内的损失；
         double band_in= power_receiver/power_sender();
         //带内损失转化为带外损失
@@ -180,6 +192,16 @@ public class BPSK {
         return band_out;
     }
 
+    /**
+     * 绘制BPSK的时域图像
+     * <ul>
+     *     @param array 整型数组是由 1 和 -1 组成的双极性码，1表示高电平，-1表示低电平
+     *     <li>无需返回值
+     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性
+     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
+     * </>
+     */
     public void paint_time(int[] array){
         int k=array.length;
         //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
@@ -205,6 +227,16 @@ public class BPSK {
         Picture_save picture_save=new Picture_save(lineChart,"BPSK_time_domain.png");
     }
 
+    /**
+     * 绘制BPSK的自相关函数图像
+     * 利用自相关函数和功率谱互为傅里叶正反变换
+     * <ul>
+     *     <li>无需传入参数和返回值，用到的参数从本类中获取
+     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性
+     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
+     * </>
+     */
     public void paint_self_correlation(){
         double a=0;
         //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
@@ -243,7 +275,14 @@ public class BPSK {
         Picture_save picture_save=new Picture_save(lineChart,"BPSK_self_correlation.png");
     }
 
-    //计算带限剩余功率
+    /**
+     * 计算带限剩余功率
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 带限剩余功率
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getLimitedBandWidth() {
         double a = 0;
         //i为小矩形的宽
@@ -254,7 +293,14 @@ public class BPSK {
         return a;
     }
 
-    //计算均方根带宽
+    /**
+     * 计算均方根带宽
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 均方根带宽
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getRMSBand() {
         double b=0;
         double i=0.05;
@@ -267,8 +313,14 @@ public class BPSK {
         return b;
     }
 
-
-    //计算与自身的频谱隔离系数
+    /**
+     * 计算与自身的频谱隔离系数
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 与自身的频谱隔离系数
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getFrequencyIsolationFactor() {
         double a = 0, b = 0, i = 0.05;
         for(double f = -15; f >= -15 && f <= 15; f = f + 0.05){
@@ -283,8 +335,14 @@ public class BPSK {
         return b;
     }
 
-
-    //计算与BPSK1的频谱隔离系数
+    /**
+     * 计算与BPSK-1的频谱隔离系数
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 与BPSK1的频谱隔离系数
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getFrequencyIsolationFactorBPSK1() {
         double a = 0, b = 0, i = 0.05;
         for(double f = -15; f >= -15 && f <= 15; f = f + i){
@@ -299,7 +357,14 @@ public class BPSK {
         return b;
     }
 
-    //计算与BOC105的频谱隔离系数,fs=10*1.023,fc=5*1.023
+    /**
+     * 计算与BOC(10，5)的频谱隔离系数,fs=10*1.023,fc=5*1.023
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 与BOC(10,5)的频谱隔离系数
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getFrequencyIsolationFactorBOC105() {
         double value=0,i=0.05;
         double a=0;
@@ -317,8 +382,13 @@ public class BPSK {
         return a;
     }
 
-
-    //计算有效矩形带宽
+    /**
+     * 计算有效矩形带宽
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 有效矩形带宽
+     * </>
+     */
     public double getRectBand(){
         double b=0;
         b = pow(fc , -1);
@@ -326,7 +396,15 @@ public class BPSK {
         return b;
     }
 
-    //计算BOC四种重要性能参数
+    /**
+     * 计算BPSK四种重要性能参数
+     * <ul>
+     *     <li>无需传入参数和返回值，用到的参数从本类中获取
+     *     <li>具体方法是，构造一个Chart_FourParas类对象，将4个参数传入
+     *     <li>生成一个javafx.scene.control中TableView对象，调用getTable()得到表格
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
+     * </>
+     */
     public void four_parameters(){
         Chart_FourParas p = new Chart_FourParas(this.getLimitedBandWidth(),this.getRMSBand(),
                 this.getFrequencyIsolationFactor(),this.getRectBand());
@@ -380,14 +458,13 @@ public class BPSK {
 
     }
 
-    public void errorInterval(){
-        Stage stage = new Stage();
+    public void paint_errorInterval(){
         //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
-        final NumberAxis xAxis = new NumberAxis();
-        final NumberAxis yAxis = new NumberAxis();
+        final NumberAxis xAxis = new NumberAxis(200,420,10);
+        final NumberAxis yAxis = new NumberAxis(0,50,1);
         //设置横轴和纵轴的标签
-        xAxis.setLabel("码片 chips");
-        yAxis.setLabel("幅度");
+        yAxis.setLabel("超前-滞后本地码间隔 /m");
+        xAxis.setLabel("码跟踪误差 △/ns");
         //creating the chart
         final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
         lineChart.setCreateSymbols(false);
@@ -396,10 +473,11 @@ public class BPSK {
         //defining a series
         XYChart.Series series1 = new XYChart.Series();
         XYChart.Series series2 = new XYChart.Series();
-        series1.setName("50bps");
-        series2.setName("50bps");
-        for (double t = 150;t<=300;t+=0.1){
-            double[] result = this.trackerError(t,1,1000);
+        series1.setName("m="+this.m+",T= "+"5ms");
+        series2.setName("m="+this.m+",T= "+"20ms");
+        double[] result;
+        for (double t = 200;t<=420;t+=0.1){
+            result = this.trackerError(t,1,1000);
             series1.getData().add(new XYChart.Data(t,result[0]));
             series2.getData().add(new XYChart.Data(t,result[1]));
         }

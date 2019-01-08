@@ -15,6 +15,7 @@ import static java.lang.Math.abs;
 
 /**
  * Created by kaixin on 2018/12/20.
+ * 该类针对各种GPS调制信号的常用特性生成表格
  */
 public class Chart_common_usage {
     private BPSK bpsk1=new BPSK(1);

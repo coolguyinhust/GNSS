@@ -18,10 +18,9 @@ import java.io.IOException;
 
 /**
  * Created by kaixin on 2018/12/19.
+ * 将lineChart，TableView等图标用界面的方式呈现，并添加保存等功能
  */
-/*
- * 将图表lineChart用界面的方式呈现，并添加保存等功能
- */
+
 public class Picture_save {
     private Stage stage= new Stage();
     private Scene scene;
@@ -33,6 +32,12 @@ public class Picture_save {
     private MenuItem menuItem1 = new MenuItem("默认保存");
     private MenuItem menuItem2 = new MenuItem("另存为");
     private String name;//默认保存时保存的图片的名字
+
+    /**
+     * 实现LineChart的保存功能
+     * @param lineChart 要保存的lineChart对象
+     * @param name 保存的图片的名字
+     */
     public Picture_save(LineChart<Number, Number> lineChart,String name) {
         this.lineChart = lineChart;
         this.name=name;
@@ -49,6 +54,11 @@ public class Picture_save {
         stage.show();
     }
 
+    /**
+     * 实现TableView的保存功能
+     * @param table 要保存的TableView对象
+     * @param name 保存的图片的名字
+     */
     public Picture_save(TableView<?> table, String name) {
         this.table=table;
         this.name=name;
@@ -67,7 +77,9 @@ public class Picture_save {
     }
 
 
-
+    /**
+     * 默认保存
+     */
     public void save() {
         WritableImage snapShot = scene.snapshot(null);
 
@@ -79,6 +91,9 @@ public class Picture_save {
         }
     }
 
+    /**
+     * 可选择路径的保存，即另存为
+     */
     public void save_as() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Picture_save Image");

@@ -4,8 +4,6 @@ import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Created by kaixin on 2018/12/20.
- */
-/*
  * 绘制GNSS常用特性时，一个key（特性）要对应五种常用信号的值
  * parameters_name表示特性；parameters_s1_value表示第一种信号对应的值
  */

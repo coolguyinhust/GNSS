@@ -30,6 +30,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+/**
+ * GUI界面使用ScreamBuilder构建，本Controller类即为界面的功能控制类；
+ * 相关控件的布局配置在sample.fxml文档中，该类主要是在用户点击相应的控件后，会触发的动作
+ * 类似于Java2中的Swing里的监听器
+ */
 public class Controller implements Initializable{
 
     //primaryStage是从Main中动态加载的，为主舞台
@@ -98,7 +103,7 @@ public class Controller implements Initializable{
     private TextField textc;
     @FXML
     private TextField textc1;
-    /*
+    /**
      * 新建一个窗口
      */
     @FXML
@@ -137,6 +142,7 @@ public class Controller implements Initializable{
             });
         }
     }
+
     @FXML
     public void close_current_window(){
         if(using_Stage!=null){
@@ -201,7 +207,7 @@ public class Controller implements Initializable{
 
             }
         };
-        application.getHostServices().showDocument("https://coolguyinhust.github.io/");
+        application.getHostServices().showDocument("https://github.com/coolguyinhust/GNSS/tree/master");
     }
 
     //判断整数（int）
@@ -456,8 +462,8 @@ public class Controller implements Initializable{
         BOC boc_signal=new BOC(x,y);
         boc_signal.paint_frequency();
     }
-    /*
-     * 绘制用户自定义的BPSK调制波形
+    /**
+     * 用户输入自定义的码元，并绘制BPSK调制波形
      */
     @FXML
     public void bpsk_power_spectrum(){
@@ -487,13 +493,13 @@ public class Controller implements Initializable{
     @FXML
     public void boc_CodeTraceInterval(){
         BOC boc_signal=new BOC(10,5);
-        boc_signal.errorInterval();
+        boc_signal.paint_errorInterval();
     }
 
     @FXML
     public void bpsk_CodeTraceInterval(){
         BPSK bpsk = new BPSK(10);
-        bpsk.errorInterval();
+        bpsk.paint_errorInterval();
     }
     @FXML
     public void bpsk_CodeTraceCN(){

@@ -16,19 +16,19 @@ import static java.lang.Math.pow;
 
 /**
  * Created by kaixin on 2018/12/13.
- */
-/**
  * BOC调制有两个参数，记为BOC(α,β);
  * 副载波频率fs=α*f0,扩频码速率fc=β*f0;f0为基频，默认为1.023MHz
  * n=2fs/fc=2α/β
- * 由时域表达式，Ct压载波周期为2Ts,Ts=1/(2fs),
+ * Ct亚载波周期为2Ts,Ts=1/(2fs)
  */
+
 public class BOC{
     private double x;
     private double y;
     private double fs;
     private double fc;
     private int n;
+
     private double br=24;//br是BOC的限制带宽，如果用户没有输入限定带宽，默认是GPS信号接收的带宽
 
 
@@ -36,6 +36,12 @@ public class BOC{
         return fc;
     }
 
+    /**
+     * BOC(α,β)
+     * @param x α
+     * @param y β
+     * @param br 限制带宽
+     */
     public BOC(double x, double y, double br) {
         this.x = x;
         this.y = y;
@@ -44,6 +50,12 @@ public class BOC{
         this.n=(int)(2*fs/fc);
         this.br=br;
     }
+
+    /**
+     *
+     * @param x α
+     * @param y β
+     */
     public BOC(double x, double y) {
         this.x = x;
         this.y = y;
@@ -51,8 +63,15 @@ public class BOC{
         this.fc = y*1.023;
         this.n=(int)(2*fs/fc);
     }
-    /*
-     * 绘制归一化的自相关函数；
+
+    /**
+     * 绘制BOC的归一化自相关函数图像
+     * <ul>
+     *     <li>无需传入参数和返回值，用到的参数从本类中获取
+     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性
+     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
+     * </>
      */
     public void self_correlation(){
         double p=x/y;
@@ -125,7 +144,12 @@ public class BOC{
         Picture_save picture_save=new Picture_save(lineChart,"BOC_self_correlation.png");
     }
 
-    //计算自相关函数主峰与第一副峰间的时延,与自相关函数第一副峰与主峰幅度平方之比
+    /**
+     * 计算自相关函数主峰与第一副峰间的时延,与自相关函数第一副峰与主峰幅度平方之比
+     * @return 返回的是包含两个浮点型数的Double数组，
+     * 第一个浮点数表示自相关函数主峰与第一副峰间的时延
+     * 第二个浮点数表示自相关函数第一副峰与主峰幅度平方之比
+     */
     public Double[] delay_SelfCorrelation(){
         double a=0,i=0.05;
         double x_min=0,y_min=0;//分别代表副峰的横坐标和纵坐标
@@ -176,7 +200,14 @@ public class BOC{
         return new Double[]{x_min,pow(y_min/y_max,2)};
     }
 
-    //计算带限剩余功率
+    /**
+     * 计算带限剩余功率
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 带限剩余功率
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getLimitedBandWidth(){
         double a = 0;
         //i为小矩形的宽
@@ -195,7 +226,14 @@ public class BOC{
         return a;
     }
 
-    //计算均方根带宽
+    /**
+     * 计算均方根带宽
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 均方根带宽
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getRMSBand() {
         double a=0;
         double i = 0.05;
@@ -215,7 +253,14 @@ public class BOC{
         return a;
     }
 
-    //计算与自身的频谱隔离系数
+    /**
+     * 计算与自身的频谱隔离系数
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 与自身的频谱隔离系数
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getFrequencyIsolationFactor(){
         double a=0,b=0,i=0.05;
         if(n%2==0) {
@@ -245,7 +290,14 @@ public class BOC{
         return  b;
     }
 
-    //计算与BPSK1的频谱隔离系数
+    /**
+     * 计算与BPSK-1的频谱隔离系数
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 与BPSK1的频谱隔离系数
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getFrequencyIsolationFactorBPSK1(){
         double a=0,b=0,i=0.05,power_bpsk=0;
         for(double f = -15; f >= -15 && f <= 15; f = f + i){
@@ -270,8 +322,14 @@ public class BOC{
         return  b;
     }
 
-
-    //计算与BOC105的频谱隔离系数,fs=10*1.023,fc=5*1.023
+    /**
+     * 计算与BOC(10，5)的频谱隔离系数,fs=10*1.023,fc=5*1.023
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 与BOC(10,5)的频谱隔离系数
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double getFrequencyIsolationFactorBOC105() {
         double value=0,i=0.05;
         double a=0;
@@ -300,7 +358,13 @@ public class BOC{
         return a;
     }
 
-    //计算有效矩形带宽
+    /**
+     * 计算有效矩形带宽
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 有效矩形带宽
+     * </>
+     */
     public double getRectBand(){
         double b=0;
         if(n%2==0) {
@@ -319,7 +383,15 @@ public class BOC{
         return b;
     }
 
-    //计算BOC四种重要性能参数
+    /**
+     * 计算BOC四种重要性能参数
+     * <ul>
+     *     <li>无需传入参数和返回值，用到的参数从本类中获取
+     *     <li>具体方法是，构造一个Chart_FourParas类对象，将4个参数传入
+     *     <li>生成一个javafx.scene.control中TableView对象，调用getTable()得到表格
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
+     * </>
+     */
     public void four_parameters(){
         Chart_FourParas p = new Chart_FourParas(this.getLimitedBandWidth(),this.getRMSBand(),
                 this.getFrequencyIsolationFactor(),this.getRectBand());
@@ -327,7 +399,16 @@ public class BOC{
         Picture_save picture_save=new Picture_save(table,"BOC_four_parameters.png");
     }
 
-
+    /**
+     * 绘制BOC的时域图像
+     * <ul>
+     *     @param array 整型数组是由 1 和 -1 组成的双极性码，1表示高电平，-1表示低电平
+     *     <li>无需返回值
+     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性
+     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
+     * </>
+     */
     public void paint_time(int[] array){
         int k=array.length;
         double Ts=1/(2*fs);
@@ -354,6 +435,15 @@ public class BOC{
         Picture_save picture_save=new Picture_save(lineChart,"BOC_time_domain.png");
     }
 
+    /**
+     * 绘制BOC的功率谱密度图像
+     * <ul>
+     *     <li>无需传入参数和返回值，用到的参数从本类中获取
+     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性
+     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
+     * </>
+     */
     public void paint_frequency(){
         //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
         final NumberAxis xAxis = new NumberAxis(-17.5,17.5,2.5);
@@ -387,8 +477,15 @@ public class BOC{
         Picture_save picture_save=new Picture_save(lineChart,"BOC_frequency_domain.png");
     }
 
-
-    //计算BOC调制信号的最大功率谱密度，找到一个（x,y），使x对应的y值最大
+    /**
+     * 计算BOC调制信号的最大功率谱密度，找到一个（x,y），使x对应的y值最大
+     * <ul>
+     *     <li>无需传入参数
+     *     @return  返回的是包含两个浮点型数的Double数组
+     *     <li> 第一个浮点数表示频谱主瓣距频带中心的频偏
+     *     <li>第二个浮点数表示主瓣最大功谱密度
+     * </>
+     */
     public Double[] get_Max_PowerSpectrum(){
         double max_power=0;
         Map<Double,Double> map=new HashMap<>();
@@ -425,11 +522,15 @@ public class BOC{
         return new Double[]{list.get(0).getKey(), list.get(0).getValue()};
     }
 
-
-
-    //计算90%功率的带宽band_n（90％功率的带宽指对于卫星发射的带宽为30MHz的信号，
-    //通过其90％的功率所需要的带宽）；
-    // 利用功率谱的对称性，要对band_n做积分=0.9,即从-15，到band_n/2做积分等于0.05
+    /**
+     * 计算90%功率的带宽band_n，其中90％功率的带宽指对于卫星发射的带宽为30MHz的信号，通过其90％的功率所需要的带宽
+     * 利用功率谱的对称性，要对band_n做积分=0.9,即从-15，到band_n/2做积分等于0.05
+     * <ul>
+     *     <li>无需传入参数
+     *      @return band which can get 90% power
+     *     <li>具体计算中，需要用到积分，这里我们用微元法，即用小矩形的面积来计算积分的值。
+     * </>
+     */
     public double getNinetyPercentBand(){
         //从-fi到fi上对功率谱积分应该等于0.9，band_n=2*fi
         double fi=-15;
@@ -452,7 +553,14 @@ public class BOC{
         return 2*Math.abs(fi);
     }
 
-    //求归一化（无限带宽上功率为1）后的30MHz频带内的发送功率
+    /**
+     * 求归一化（无限带宽上功率为1）后的30MHz频带内的发送功率
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 返回对-15MHz到15MHz区域上的积分值，得到总功率以便归一化
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     private double power_sender(){
         double value;
         double power_sender=0;
@@ -475,10 +583,16 @@ public class BOC{
         return  power_sender;
     }
 
-
-    //带外损失功率（dB）的定为为：
-    //- 10 Log10[带内功率（归一化的）/1]  (dB)
-    //发射带宽为30MHz,接收带宽为24MHz损失的功率
+    /**
+     * 带外损失功率（dB）的定为为：
+     * - 10 Log10[带内功率（归一化的）/1]  (dB)
+     * 发射带宽为30MHz,接收带宽为24MHz损失的功率
+     * <ul>
+     *     <li>无需传入参数
+     *      @return 带外损失功率
+     *     <li>具体计算中，设计到积分的计算用微元法
+     * </>
+     */
     public double band_loss(){
         double value;
         double power_receiver=0;
@@ -502,6 +616,13 @@ public class BOC{
         return band_out;
     }
 
+    /**
+     * @author Wangyu
+     * @param t
+     * @param bl 码跟踪环单边噪声等效矩形带宽 (Hz)
+     * @param sCN0
+     * @return
+     */
     //码跟踪误差的计算,分析不同条件下BOC调制信号码跟踪精度的影响
     public double[] trackerError(double t,double bl,double sCN0){
         double[] result = new double[2];
@@ -593,7 +714,11 @@ public class BOC{
         return result;
     }
 
-    public void errorInterval(){
+    /**
+     * @author Wangyu
+     * 绘制BOC的误码跟踪曲线
+     */
+    public void paint_errorInterval(){
             Stage stage = new Stage();
             //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
             final NumberAxis xAxis = new NumberAxis();
