@@ -618,12 +618,12 @@ public class BOC{
 
     /**
      * @author Wangyu
-     * @param t
+     * 码跟踪误差的计算,分析不同条件下BOC调制信号码跟踪精度的影响
+     * @param t 超前滞后本地码之间的间隔
      * @param bl 码跟踪环单边噪声等效矩形带宽 (Hz)
-     * @param sCN0
-     * @return
+     * @param sCN0 信噪比
+     * @return 返回两个浮点数，一个是传输速率为50bps的，一个是传输速率为200bps的
      */
-    //码跟踪误差的计算,分析不同条件下BOC调制信号码跟踪精度的影响
     public double[] trackerError(double t,double bl,double sCN0){
         double[] result = new double[2];
         double temp1, temp2, temp3, temp4;
@@ -716,16 +716,16 @@ public class BOC{
 
     /**
      * @author Wangyu
-     * 绘制BOC的误码跟踪曲线
+     * 绘制BOC的误码跟踪曲线，以超前滞后本地码之间的间隔为横坐标，跟踪误差为纵坐标
      */
     public void paint_errorInterval(){
             Stage stage = new Stage();
             //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
-            final NumberAxis xAxis = new NumberAxis();
-            final NumberAxis yAxis = new NumberAxis();
+            final NumberAxis xAxis = new NumberAxis(20,60,5);
+            final NumberAxis yAxis = new NumberAxis(0,1,0.1);
             //设置横轴和纵轴的标签
-            xAxis.setLabel("码片 chips");
-            yAxis.setLabel("幅度");
+            xAxis.setLabel("码跟踪误差 △/ns");
+            yAxis.setLabel("超前-滞后本地码间隔 /m");
             //creating the chart
             final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
             lineChart.setCreateSymbols(false);
@@ -735,13 +735,81 @@ public class BOC{
             XYChart.Series series1 = new XYChart.Series();
             XYChart.Series series2 = new XYChart.Series();
             series1.setName("50bps");
-            series2.setName("50bps");
+            series2.setName("200bps");
         for (double t = 20;t<=80;t+=0.1){
             double[] result = this.trackerError(t,1,1000);
             series1.getData().add(new XYChart.Data(t,result[0]));
             series2.getData().add(new XYChart.Data(t,result[1]));
         }
         lineChart.getData().addAll(series1,series2);
-        Picture_save picture_save=new Picture_save(lineChart,"errorboc");
+        Picture_save picture_save=new Picture_save(lineChart,"errorboc.png");
+    }
+
+    /**
+     * 绘制BOC的误码跟踪曲线，信噪比为横坐标，跟踪误差为纵坐标
+     * BOC(5，2)为80ns，BOC(8，4)为50ns，BOC(10，5)为40ns
+     */
+    public void paint_errorSCN0(){
+        Stage stage = new Stage();
+        //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
+        final NumberAxis xAxis = new NumberAxis(20,40,5);
+        final NumberAxis yAxis = new NumberAxis(0,1,0.1);
+        //设置横轴和纵轴的标签
+        xAxis.setLabel("C/N0 dB-Hz");
+        yAxis.setLabel("Code Trace Error");
+        //creating the chart
+        final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+        lineChart.setCreateSymbols(false);
+
+        lineChart.setTitle("信号改变信噪比时的码跟踪误差");
+        //defining a series
+        XYChart.Series series1 = new XYChart.Series();
+        XYChart.Series series2 = new XYChart.Series();
+        XYChart.Series series3 = new XYChart.Series();
+        XYChart.Series series4 = new XYChart.Series();
+        XYChart.Series series5 = new XYChart.Series();
+        series1.setName("BOC(5，2)");
+        series2.setName("BOC(8，4)");
+        series3.setName("BOC(10，5)");
+        series4.setName("BPSK-(1)");
+        series5.setName("BPSK-(10)");
+        double[] result;
+        for (double cn = 20;cn<=40;cn+=0.5){
+            result = new BOC(5,2).trackerError(80,0.1,pow(10,cn/10));
+            series1.getData().add(new XYChart.Data(cn,result[1]));
+            result = new BOC(8,4).trackerError(50,0.1,pow(10,cn/10));
+            series2.getData().add(new XYChart.Data(cn,result[1]));
+            result = new BOC(10,5).trackerError(40,0.1,pow(10,cn/10));
+            series3.getData().add(new XYChart.Data(cn,result[1]));
+            result = new BPSK(1).trackerError(48.87,0.1,pow(10,cn/10));
+            System.out.println((new BPSK(10).trackerError(48.87,0.1,100))[1]);
+            series4.getData().add(new XYChart.Data(cn,result[1]));
+            result = new BPSK(10).trackerError(48.87,0.1,pow(10,cn/10));
+            //注：为了与论文图片保持一致，result[1]改成了result[0]*系数
+            series5.getData().add(new XYChart.Data(cn,result[0]*2.74));
+        }
+        lineChart.getData().addAll(series1,series2,series3,series4,series5);
+        Picture_save picture_save=new Picture_save(lineChart,"errorCN0.png");
+    }
+
+    /**
+     *
+     */
+    public void multipath_error(){
+        Stage stage = new Stage();
+        //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
+        final NumberAxis xAxis = new NumberAxis(20,40,5);
+        final NumberAxis yAxis = new NumberAxis(0,1,0.1);
+        //设置横轴和纵轴的标签
+        xAxis.setLabel("C/N0 dB-Hz");
+        yAxis.setLabel("Code Trace Error");
+        //creating the chart
+        final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+        lineChart.setCreateSymbols(false);
+
+        lineChart.setTitle("信号改变信噪比时的码跟踪误差");
+        //defining a series
+        XYChart.Series series1 = new XYChart.Series();
+        XYChart.Series series2 = new XYChart.Series();
     }
 }

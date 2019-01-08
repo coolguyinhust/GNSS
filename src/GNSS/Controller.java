@@ -478,18 +478,10 @@ public class Controller implements Initializable{
 
     @FXML
     public void boc_CodeTraceCN(){
-
+        BOC boc = new BOC(5,2);
+        boc.paint_errorSCN0();
     }
 
-    @FXML
-    public void boc_CodeTraceBand(){
-
-    }
-
-    @FXML
-    public void boc_CodeTraceT(){
-
-    }
     @FXML
     public void boc_CodeTraceInterval(){
         BOC boc_signal=new BOC(10,5);
@@ -497,25 +489,28 @@ public class Controller implements Initializable{
     }
 
     @FXML
+    public void boc_multipath(){
+
+    }
+
+    @FXML
     public void bpsk_CodeTraceInterval(){
         BPSK bpsk = new BPSK(10);
         bpsk.paint_errorInterval();
     }
+
+    /**
+     * 各种调制的码跟踪误差与 C／No的函数关系
+     */
     @FXML
     public void bpsk_CodeTraceCN(){
-
+        boc_CodeTraceCN();
     }
 
     @FXML
-    public void bpsk_CodeTraceBand(){
+    public void bpsk_multipath(){
 
     }
-
-    @FXML
-    public void bpsk_CodeTraceT(){
-
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         menuBar.prefWidthProperty().bind(ap.widthProperty());//宽度绑定为Pane宽度

@@ -458,10 +458,13 @@ public class BPSK {
 
     }
 
+    /**
+     * 绘制BPSK的误码跟踪曲线，以超前滞后本地码之间的间隔为横坐标，跟踪误差为纵坐标
+     */
     public void paint_errorInterval(){
         //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
-        final NumberAxis xAxis = new NumberAxis(200,420,10);
-        final NumberAxis yAxis = new NumberAxis(0,50,1);
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
         //设置横轴和纵轴的标签
         yAxis.setLabel("超前-滞后本地码间隔 /m");
         xAxis.setLabel("码跟踪误差 △/ns");
@@ -469,19 +472,26 @@ public class BPSK {
         final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
         lineChart.setCreateSymbols(false);
 
-        lineChart.setTitle("BPSK码跟踪误差");
+        lineChart.setTitle("BPSK改变本地码间隔时码跟踪误差");
         //defining a series
         XYChart.Series series1 = new XYChart.Series();
         XYChart.Series series2 = new XYChart.Series();
         series1.setName("m="+this.m+",T= "+"5ms");
         series2.setName("m="+this.m+",T= "+"20ms");
         double[] result;
-        for (double t = 200;t<=420;t+=0.1){
+        for (double t = 40;t<=220;t+=1){
             result = this.trackerError(t,1,1000);
             series1.getData().add(new XYChart.Data(t,result[0]));
             series2.getData().add(new XYChart.Data(t,result[1]));
         }
         lineChart.getData().addAll(series1,series2);
-        Picture_save picture_save=new Picture_save(lineChart,"errorbpsk");
+        Picture_save picture_save=new Picture_save(lineChart,"errorbpsk.png");
+    }
+
+    /**
+     *
+     */
+    public void multipath_error(){
+
     }
 }

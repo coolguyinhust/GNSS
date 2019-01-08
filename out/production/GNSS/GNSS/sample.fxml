@@ -49,9 +49,8 @@
                         <Menu mnemonicParsing="false" text="码跟踪精度分析">
                            <items>
                               <MenuItem fx:id="boc_CodeTraceCN" mnemonicParsing="false" onAction="#boc_CodeTraceCN" text="改变信噪比" />
-                              <MenuItem fx:id="boc_CodeTraceBand" mnemonicParsing="false" onAction="#boc_CodeTraceBand" text="改变接收带宽" />
-                              <MenuItem fx:id="boc_CodeTraceT" mnemonicParsing="false" onAction="#boc_CodeTraceT" text="改变数据速率" />
                               <MenuItem fx:id="boc_CodeTraceT1" mnemonicParsing="false" onAction="#boc_CodeTraceInterval" text="改变码间间隔" />
+                              <MenuItem fx:id="boc_CodeTraceBand" mnemonicParsing="false" onAction="#boc_multipath" text="多径分析" />
                            </items>
                         </Menu>
                      </items>
@@ -70,9 +69,8 @@
                         <Menu mnemonicParsing="false" text="码跟踪精度分析">
                            <items>
                               <MenuItem fx:id="bpsk_CodeTraceCN" mnemonicParsing="false" onAction="#bpsk_CodeTraceCN" text="改变信噪比" />
-                              <MenuItem fx:id="bpsk_CodeTraceBand" mnemonicParsing="false" onAction="#bpsk_CodeTraceBand" text="改变接收带宽" />
-                              <MenuItem fx:id="bpsk_CodeTraceT" mnemonicParsing="false" onAction="#bpsk_CodeTraceT" text="改变数据速率" />
                               <MenuItem fx:id="boc_CodeTraceT11" mnemonicParsing="false" onAction="#bpsk_CodeTraceInterval" text="改变码间间隔" />
+                              <MenuItem fx:id="bpsk_CodeTraceBand" mnemonicParsing="false" onAction="#bpsk_multipath" text="多径分析" />
                            </items>
                         </Menu>
                      </items>
