@@ -808,8 +808,8 @@ public class BOC {
         lineChart.setCreateSymbols(false);
         lineChart.setTitle("多径误差包络");
         //defining a series
-        XYChart.Series<Number,Number> series1 = new XYChart.Series<>();
-        XYChart.Series<Number,Number> series2 = new XYChart.Series<>();
+        XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
+        XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
         double a = 0;
         double b = 0;
         double c = 0;
@@ -917,7 +917,7 @@ public class BOC {
         Picture_save picture_save = new Picture_save(lineChart, "multipath_boc.png");
     }
 
-    public void wave_boc(double smr, double Tc){
+    public void wave_boc(double smr) {
         Stage stage = new Stage();
         //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
         final NumberAxis xAxis = new NumberAxis();
@@ -931,47 +931,189 @@ public class BOC {
         lineChart.setCreateSymbols(false);
         lineChart.setTitle("波动函数");
         //defining a series
-        XYChart.Series<Number,Number> series1 = new XYChart.Series<>();
-        XYChart.Series<Number,Number> series2 = new XYChart.Series<>();
+        XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
+        XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
         double a = 0;
         double b = 0;
-        if((2 * fs / fc) % 2 == 0){
-            for(double t = 0; t <= 1467; t = t + 2){
+        if ((2 * fs / fc) % 2 == 0) {
+            for (double t = 0; t <= 1467; t = t + 2) {
 
-                for(double f = -(br/2); f >= -(br/2) && f <= (br/2); f = f + i){
-                    a = a + Math.pow(10, -smr/20) *  fc * pow(Math.tan(Math.PI * f / (2 * fs))
-                            * Math.sin(Math.PI * f / fc), 2)  / pow(Math.PI * f, 2) *
-                            f * f * Math.cos(2 * Math.PI * f * t * 0.001)* i ;
+                for (double f = -(br / 2); f >= -(br / 2) && f <= (br / 2); f = f + i) {
+                    a = a + Math.pow(10, -smr / 20) * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                            * Math.sin(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                            f * f * Math.cos(2 * Math.PI * f * t * 0.001) * i;
 
-                    b = b +  f * fc * pow(Math.tan(Math.PI * f / (2 * fs))
-                            * Math.sin(Math.PI * f / fc), 2)  / pow(Math.PI * f, 2) *
-                            f * i ;
+                    b = b + f * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                            * Math.sin(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                            f * i;
                 }
-                b = a/b;
-                series1.getData().add(new XYChart.Data(t * 1 * 1.023 * 0.001,1+ b));
-                series2.getData().add(new XYChart.Data(t * 1 * 1.023 * 0.001,1- b ));
+                b = a / b;
+                series1.getData().add(new XYChart.Data(t * 1 * 1.023 * 0.001, 1 + b));
+                series2.getData().add(new XYChart.Data(t * 1 * 1.023 * 0.001, 1 - b));
+                a = 0;
+                b = 0;
+            }
+        } else {
+            for (double t = 0; t <= 1400; t = t + 2) {
+                for (double f = -(br / 2); f >= -(br / 2) && f <= (br / 2); f = f + i) {
+                    a = a + Math.pow(10, -smr / 20) * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                            * Math.cos(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                            f * f * Math.cos(2 * Math.PI * f * t * 0.001) * i;
+
+                    b = b + f * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                            * Math.cos(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                            f * i;
+                }
+                b = a / b;
+                series1.getData().add(new XYChart.Data(t * 1 * 1.023 * 0.001, 1 + b));
+                series2.getData().add(new XYChart.Data(t * 1 * 1.023 * 0.001, 1 - b));
                 a = 0;
                 b = 0;
             }
         }
-        else{
-            for(double t = 0; t <= 1400; t = t + 2){
-                for(double f = -(br/2); f >= -(br/2) && f <= (br/2); f = f + i){
-                    a = a + Math.pow(10, -smr/20) *  fc * pow(Math.tan(Math.PI * f / (2 * fs))
-                            * Math.cos(Math.PI * f / fc), 2)  / pow(Math.PI * f, 2) *
-                            f * f * Math.cos(2 * Math.PI * f * t * 0.001)* i ;
+        lineChart.getData().addAll(series1, series2);
+        series1.nodeProperty().get().setStyle("-fx-stroke:IndianRed;");
+        series2.nodeProperty().get().setStyle("-fx-stroke:IndianRed;");
+        Picture_save picture_save = new Picture_save(lineChart, "multipath_boc.png");
+    }
 
-                    b = b +  f * fc * pow(Math.tan(Math.PI * f / (2 * fs))
-                            * Math.cos(Math.PI * f / fc), 2)  / pow(Math.PI * f, 2) *
-                            f * i ;
+    public void slip_boc(double smr, double Tc) {
+//限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final double i = 0.05;
+        //设置横轴和纵轴的标签
+        xAxis.setLabel("多径延迟（m）");
+        yAxis.setLabel("平均多径误差包络（m）");
+        //creating the chart
+        final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+        lineChart.setCreateSymbols(false);
+        lineChart.setTitle("滑动平均多径误差包络");
+        //defining a series
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        double a = 0;
+        double b = 0;
+        double c = 0;
+        double d = 0;
+        double e1 = 0;
+        double e2 = 0;
+        if (Tc != 0) {
+            if ((2 * fs / fc) % 2 == 0) {
+                for (double t = 0.01; t <= 1667; t = t + 0.5) {
+
+                    for (double f = -(br / 2); f >= -(br / 2) && f <= (br / 2); f = f + i) {
+                        a = a + Math.pow(10, -smr / 20) * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.sin(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                Math.sin(Math.PI * f * Tc * 0.001) * Math.sin(2 * Math.PI * f * t * 0.001) * i;
+
+                        b = b + Math.PI * 2 * f * 1000000 * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.sin(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                Math.sin(Math.PI * f * Tc * 0.001) * (1 + Math.pow(10, -smr / 20)
+                                * Math.cos(2 * Math.PI * f * t * 0.001)) * i;
+
+                        c = c + Math.PI * 2 * f * 1000000 * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.sin(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                Math.sin(Math.PI * f * Tc * 0.001) * (1 - Math.pow(10, -smr / 20)
+                                * Math.cos(2 * Math.PI * f * t * 0.001)) * i;
+                    }
+                    b = a / b;
+                    c = a / c;
+                    e1 = Math.abs((b + c) / 2);
+                    d = d + e1 * 0.5;
+                    e2 = d / t;
+                    series.getData().add(new XYChart.Data(t * 0.3, e2 * 3 * Math.pow(10, 8)));
+                    a = 0;
+                    b = 0;
+                    c = 0;
                 }
-                b = a/b;
-                series1.getData().add(new XYChart.Data(t * 1 * 1.023 * 0.001,1+ b));
-                series2.getData().add(new XYChart.Data(t * 1 * 1.023 * 0.001,1- b ));
-                a = 0;
-                b = 0;
-            }
+            } else {
+                for (double t = 0.01; t <= 1667; t = t + 0.5) {
+                    for (double f = -(br / 2); f >= -(br / 2) && f <= (br / 2); f = f + i) {
+                        a = a + Math.pow(10, -smr / 20) * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.cos(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                Math.sin(Math.PI * f * Tc * 0.001) * Math.sin(2 * Math.PI * f * t * 0.001) * i;
 
+                        b = b + Math.PI * 2 * f * 1000000 * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.cos(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                Math.sin(Math.PI * f * Tc * 0.001) * (1 + Math.pow(10, -smr / 20)
+                                * Math.cos(2 * Math.PI * f * t * 0.001)) * i;
+
+                        c = c + Math.PI * 2 * f * 1000000 * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.cos(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                Math.sin(Math.PI * f * Tc * 0.001) * (1 - Math.pow(10, -smr / 20)
+                                * Math.cos(2 * Math.PI * f * t * 0.001)) * i;
+                    }
+                    b = a / b;
+                    c = a / c;
+                    e1 = Math.abs((b + c) / 2);
+                    d = d + e1 * 0.5;
+                    e2 = d / t;
+                    series.getData().add(new XYChart.Data(t * 0.3, e2 * 3 * Math.pow(10, 8)));
+                    a = 0;
+                    b = 0;
+                    c = 0;
+                }
+            }
+        } else {
+            if ((2 * fs / fc) % 2 == 0) {
+                for (double t = 0.01; t <= 1667; t = t + 0.5) {
+                    for (double f = -(br / 2); f >= -(br / 2) && f <= (br / 2); f = f + i) {
+                        a = a + Math.pow(10, -smr / 20) * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.sin(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                f * Math.sin(2 * Math.PI * f * t * 0.001) * i;
+
+                        b = b + Math.PI * 2 * f * 1000000 * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.sin(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                f * (1 + Math.pow(10, -smr / 20)
+                                * Math.cos(2 * Math.PI * f * t * 0.001)) * i;
+
+                        c = c + Math.PI * 2 * f * 1000000 * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.sin(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                f * (1 - Math.pow(10, -smr / 20)
+                                * Math.cos(2 * Math.PI * f * t * 0.001)) * i;
+                    }
+                    b = a / b;
+                    c = a / c;
+                    e1 = Math.abs((b + c) / 2);
+
+                    d = d + e1 * 0.5;
+                    e2 = d / t;
+                    series.getData().add(new XYChart.Data(t * 0.3, e2 * 3 * Math.pow(10, 8)));
+                    a = 0;
+                    b = 0;
+                    c = 0;
+                }
+            } else {
+                for (double t = 0.01; t <= 1667; t = t + 0.5) {
+
+                    for (double f = -(br / 2); f >= -(br / 2) && f <= (br / 2); f = f + i) {
+                        a = a + Math.pow(10, -smr / 20) * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.cos(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                f * Math.sin(2 * Math.PI * f * t * 0.001) * i;
+
+                        b = b + Math.PI * 2 * f * 1000000 * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.cos(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                f * (1 + Math.pow(10, -smr / 20)
+                                * Math.cos(2 * Math.PI * f * t * 0.001)) * i;
+
+                        c = c + Math.PI * 2 * f * 1000000 * fc * pow(Math.tan(Math.PI * f / (2 * fs))
+                                * Math.cos(Math.PI * f / fc), 2) / pow(Math.PI * f, 2) *
+                                f * (1 - Math.pow(10, -smr / 20)
+                                * Math.cos(2 * Math.PI * f * t * 0.001)) * i;
+                    }
+                    b = a / b;
+                    c = a / c;
+                    e1 = Math.abs((b + c) / 2);
+                    d = d + e1 * 0.5;
+                    e2 = d / t;
+                    series.getData().add(new XYChart.Data(t * 0.3, e2 * 3 * Math.pow(10, 8)));
+                    a = 0;
+                    b = 0;
+                    c = 0;
+                }
+            }
         }
+        lineChart.getData().add(series);
+        Picture_save picture_save = new Picture_save(lineChart, "slip_boc.png");
     }
 }

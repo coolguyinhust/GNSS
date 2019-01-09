@@ -52,6 +52,7 @@
                               <MenuItem fx:id="boc_CodeTraceT1" mnemonicParsing="false" onAction="#boc_CodeTraceInterval" text="改变码间间隔" />
                               <MenuItem fx:id="boc_CodeTraceBand" mnemonicParsing="false" onAction="#boc_multipath" text="自定义多径分析" />
                               <MenuItem mnemonicParsing="false" onAction="#wave_boc" text="波动方程" />
+                              <MenuItem mnemonicParsing="false" onAction="#slip_boc" text="滑动平均多径误差包络" />
                            </items>
                         </Menu>
                      </items>
@@ -74,6 +75,8 @@
                               <MenuItem fx:id="bpsk_CodeTraceBand" mnemonicParsing="false" onAction="#bpsk_multipath" text="自定义多径分析" />
                               <MenuItem mnemonicParsing="false" onAction="#bandchange_multi" text="改变带宽多径分析" />
                               <MenuItem mnemonicParsing="false" onAction="#changeTc_multi" text="改变间距多径分析" />
+                              <MenuItem mnemonicParsing="false" onAction="#wave_bpsk" text="波动方程" />
+                              <MenuItem mnemonicParsing="false" onAction="#slip_bpsk" text="滑动平均多径误差包络" />
                            </items>
                         </Menu>
                      </items>

@@ -521,9 +521,99 @@ public class Controller implements Initializable{
         BOC boc = new BOC(a,b,c);
         boc.multipath_error(x,y);
     }
+
+
     @FXML
     public void wave_boc(){
+        if(!judge_Text_valid()) {
+            return;
+        }
+        if(!(isInteger(text5.getText())||isDouble(text5.getText()))){
+            System.out.println("请在第六个文本输入框中请输入数字,单位是MHz");
+            return ;
+        }
+        if(!(isInteger(text6.getText())||isDouble(text6.getText()))){
+            System.out.println("请输入BOC的SMR输入框中请输入数字...");
+            return;
+        }
+        double a = Double.parseDouble(text1.getText());
+        double b = Double.parseDouble(text2.getText());
+        double c = Double.parseDouble(text5.getText());
+        double x = Double.parseDouble(text6.getText());
+        BOC boc = new BOC(a,b,c);
+        boc.wave_boc(x);
+    }
 
+    @FXML
+    public void slip_boc(){
+        if(!judge_Text_valid()) {
+            return;
+        }
+        if(!(isInteger(text5.getText())||isDouble(text5.getText()))){
+            System.out.println("请在第六个文本输入框中请输入数字,单位是MHz");
+            return ;
+        }
+        if(!(isInteger(text6.getText())||isDouble(text6.getText()))){
+            System.out.println("请输入BOC的SMR输入框中请输入数字...");
+            return;
+        }
+        if(!(isInteger(text7.getText())||isDouble(text7.getText()))){
+            System.out.println("请输入BOC的相关器间距输入框中请输入数字...");
+            return;
+        }
+        double a = Double.parseDouble(text1.getText());
+        double b = Double.parseDouble(text2.getText());
+        double c = Double.parseDouble(text5.getText());
+        double x = Double.parseDouble(text6.getText());
+        double y = Double.parseDouble(text7.getText());
+        BOC boc = new BOC(a,b,c);
+        boc.slip_boc(x,y);
+    }
+    @FXML
+    public void slip_bpsk(){
+        if(!(isInteger(texta.getText()))){
+            System.out.println("请在BPSK第一个文本输入框中请输入整数...");
+            return;
+        }
+        if(!(isInteger(textc1.getText())||isDouble(textc1.getText()))){
+            System.out.println("请输入BPSK带限宽度...");
+            return;
+        }
+        if(!(isInteger(texte.getText())||isDouble(texte.getText()))){
+            System.out.println("请输入BPSK的SMR值...");
+            return;
+        }
+        if(!(isInteger(textf.getText())||isDouble(textf.getText()))){
+            System.out.println("请在BPSK的相关器间距...");
+            return;
+        }
+        Integer m = Integer.parseInt(texta.getText());
+        double br = Double.parseDouble(textc1.getText());
+        double smr = Double.parseDouble(texte.getText());
+        double tc = Double.parseDouble(texte.getText());
+        BPSK bpsk = new BPSK(br,m);
+        bpsk.slip_bpsk(smr,tc);
+    }
+
+    @FXML
+    public void wave_bpsk(){
+        if(!(isInteger(texta.getText()))){
+            System.out.println("请在BPSK第一个文本输入框中请输入整数...");
+            return;
+        }
+        if(!(isInteger(textc1.getText())||isDouble(textc1.getText()))){
+            System.out.println("请输入BPSK带限宽度...");
+            return;
+        }
+        if(!(isInteger(texte.getText())||isDouble(texte.getText()))){
+            System.out.println("请输入BPSK的SMR值...");
+            return;
+        }
+        Integer m = Integer.parseInt(texta.getText());
+        double br = Double.parseDouble(textc1.getText());
+        double smr = Double.parseDouble(texte.getText());
+        BPSK bpsk = new BPSK(br,m);
+        bpsk.wave_bpsk(smr);
     }
 
     @FXML

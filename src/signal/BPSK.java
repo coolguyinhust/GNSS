@@ -669,11 +669,17 @@ public class BPSK {
 
         lineChart.getData().addAll(series1, series11,series2,series22,series3,series33,series4,series44);
         series1.nodeProperty().get().setStyle("-fx-stroke:Violet;");
+        series1.setName("30MHZ");
         series11.nodeProperty().get().setStyle("-fx-stroke:Violet;");
+        series11.setName("  ");
+        series2.setName("8MHZ");
         series2.nodeProperty().get().setStyle("-fx-stroke:SpringGreen;");
+        series22.setName("  ");
         series22.nodeProperty().get().setStyle("-fx-stroke:SpringGreen;");
         series3.nodeProperty().get().setStyle("-fx-stroke:MediumBlue;");
+        series3.setName("16MHZ");
         series33.nodeProperty().get().setStyle("-fx-stroke:MediumBlue;");
+        series33.setName("4MHZ");
         series4.nodeProperty().get().setStyle("-fx-stroke:OrangeRed;");
         series44.nodeProperty().get().setStyle("-fx-stroke:OrangeRed;");
         Picture_save picture_save = new Picture_save(lineChart, "bandmultipath_bpsk.png");
@@ -691,7 +697,7 @@ public class BPSK {
 
         lineChart.setCreateSymbols(false);
 
-        lineChart.setTitle("不同接收带宽时多径误差包络");
+        lineChart.setTitle("不同相关器间隔时多径误差包络");
         //defining a series
         XYChart.Series<Number,Number> series1 = new XYChart.Series<>();
         XYChart.Series<Number,Number> series11 = new XYChart.Series<>();
@@ -762,5 +768,129 @@ public class BPSK {
         series4.nodeProperty().get().setStyle("-fx-stroke:OrangeRed;");
         series44.nodeProperty().get().setStyle("-fx-stroke:OrangeRed;");
         Picture_save picture_save = new Picture_save(lineChart, "Tcmultipath_bpsk.png");
+    }
+
+    /**
+     * BPSK的波动方程
+     */
+    public void wave_bpsk(double smr){
+//限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final double i = 0.05;
+        //设置横轴和纵轴的标签
+        xAxis.setLabel("多径时延（码片）");
+        yAxis.setLabel("波动函数数值");
+        //creating the chart
+        final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+        lineChart.setCreateSymbols(false);
+        lineChart.setTitle("波动函数");
+        //defining a series
+        XYChart.Series<Number,Number> series1 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series2 = new XYChart.Series<>();
+        double a = 0;
+        double b = 0;
+        for(double t = 0; t <= 1467; t = t + 2){
+            for(double f = -(br/2); f >= -(br/2) && f <= (br/2); f = f + i){
+                a = a + Math.pow(10, -smr/20) * m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                        / (pow(Math.PI * f, 2)) *
+                        f * f * Math.cos(2 * Math.PI * f * t * 0.001)* i ;
+
+                b = b +  f * m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                        / (pow(Math.PI * f, 2)) *
+                        f * i ;
+            }
+            b = a/b;
+            series1.getData().add(new XYChart.Data(t * m * 1.023 * 0.001,1+ b));
+            series2.getData().add(new XYChart.Data(t * m * 1.023 * 0.001,1- b ));
+            a = 0;
+            b = 0;
+        }
+        lineChart.getData().addAll(series1, series2);
+        series1.nodeProperty().get().setStyle("-fx-stroke:IndianRed;");
+        series2.nodeProperty().get().setStyle("-fx-stroke:IndianRed;");
+        Picture_save picture_save = new Picture_save(lineChart, "bpsk_wave.png");
+    }
+
+    public void slip_bpsk(double smr, double Tc) {
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final double i = 0.05;
+        //设置横轴和纵轴的标签
+        xAxis.setLabel("多径延迟（m）");
+        yAxis.setLabel("平均多径误差包络值（m）");
+        //creating the chart
+        final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+        lineChart.setCreateSymbols(false);
+        lineChart.setTitle("滑动平均多径误差包络");
+        //defining a series
+        XYChart.Series<Number, Number> series= new XYChart.Series<>();
+        double a  = 0;
+        double b  = 0;
+        double c  = 0;
+        double d  = 0;
+        double e1  = 0;
+        double e2  = 0;
+        if(Tc != 0){
+            for(double t = 0.01; t <= 1667; t = t + 0.5){
+                for(double f = -(br/2); f >= -(br/2) && f <= (br/2); f = f + i){
+                    a = a + Math.pow(10, -smr/20) *  m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                            / (pow(Math.PI * f, 2))  *
+                            Math.sin(Math.PI * f * Tc * 0.001) * Math.sin(2 * Math.PI * f * t * 0.001)* i ;
+
+                    b = b + Math.PI * 2 * f * 1000000 *m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                            / (pow(Math.PI * f, 2))  *
+                            Math.sin(Math.PI * f * Tc * 0.001) * (1 + Math.pow(10, -smr/20)
+                            * Math.cos(2 * Math.PI * f * t * 0.001))* i ;
+
+                    c = c + Math.PI * 2 * f * 1000000 * m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                            / (pow(Math.PI * f, 2))  *
+                            Math.sin(Math.PI * f * Tc * 0.001) * (1 - Math.pow(10, -smr/20)
+                            * Math.cos(2 * Math.PI * f * t * 0.001))* i ;
+                }
+                b = a/b;
+                c = a/c;
+                e1 = Math.abs((b + c) / 2);
+
+                d = d + e1 * 0.5;
+                e2 = d / t;
+                series.getData().add(new XYChart.Data(t * 0.3, e2 * 3 * Math.pow(10, 8)));
+                a = 0;
+                b = 0;
+                c = 0;
+            }
+        }
+        else{
+            for(double t = 0.01; t <= 1667; t = t + 0.5){
+
+                for(double f = -(br/2); f >= -(br/2) && f <= (br/2); f = f + i){
+                    a = a + Math.pow(10, -smr/20) *  m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                            / (pow(Math.PI * f, 2))  *
+                            f * Math.sin(2 * Math.PI * f * t * 0.001)* i ;
+
+                    b = b + Math.PI * 2 * f * 1000000 * m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                            / (pow(Math.PI * f, 2))  *
+                            f * (1 + Math.pow(10, -smr/20)
+                            * Math.cos(2 * Math.PI * f * t * 0.001))* i ;
+
+                    c = c + Math.PI * 2 * f * 1000000 * m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                            / (pow(Math.PI * f, 2))  *
+                            f * (1 - Math.pow(10, -smr/20)
+                            * Math.cos(2 * Math.PI * f * t * 0.001))* i ;
+                }
+                b = a/b;
+                c = a/c;
+                e1 = Math.abs((b + c) / 2);
+
+                d = d + e1 * 0.5;
+                e2 = d / t;
+                series.getData().add(new XYChart.Data(t * 0.3, e2 * 3 * Math.pow(10, 8)));
+                a = 0;
+                b = 0;
+                c = 0;
+            }
+        }
+        lineChart.getData().add(series);
+        Picture_save picture_save = new Picture_save(lineChart, "slip_bpsk.png");
     }
 }
