@@ -20,7 +20,7 @@ public class Main extends Application {
         controller.setprimaryStage(primaryStage);
 
         primaryStage.setTitle("GNSS信号分析仪");
-        primaryStage.setScene(new Scene(root, 750, 600));
+        primaryStage.setScene(new Scene(root, 780, 630));
         primaryStage.show();
     }
 

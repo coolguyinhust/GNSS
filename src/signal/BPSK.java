@@ -7,6 +7,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 
 import java.util.Arrays;
 
@@ -72,11 +73,11 @@ public class BPSK {
     /**
      * 绘制BPSK的功率谱密度图像
      * <ul>
-     *     <li>无需传入参数和返回值，用到的参数从本类中获取
-     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性
-     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）
-     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
-     * </>
+     *     <li>无需传入参数和返回值，用到的参数从本类中获取</li>
+     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性</li>
+     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）</li>
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。</li>
+     * </ul>
      */
     public void paint_frequency(){
         //限定坐标轴的范围，tickUnit是坐标轴上一大格的刻度
@@ -111,11 +112,11 @@ public class BPSK {
     /**
      * 计算BPSK主瓣的最大功率谱密度，即零频率时对应的功率谱函数上的值。
      * <ul>
-     *     <li>无需传入参数
-     *     @return  the maximum value of powerSpectrum
-     *     <li>此处有一处需要注意，频率不能直接取0,因为出现在了分母中；
+     *     <li>无需传入参数</li>
+     *     <li>此处有一处需要注意，频率不能直接取0,因为出现在了分母中；</li>
      *     <li>我们只有采取求极限的方式，取一个趋近于0的数</li>
-     * </>
+     * </ul>
+     * @return  the maximum value of powerSpectrum
      */
     public double get_Max_PowerSpectrum(){
         double f=0.00001;
@@ -128,10 +129,10 @@ public class BPSK {
      * 计算90%功率的带宽band_n，其中90％功率的带宽指对于卫星发射的带宽为30MHz的信号，通过其90％的功率所需要的带宽
      * 利用功率谱的对称性，要对band_n做积分=0.9,即从-15，到band_n/2做积分等于0.05
      * <ul>
-     *     <li>无需传入参数
-     *      @return band which can get 90% power
-     *     <li>具体计算中，需要用到积分，这里我们用微元法，即用小矩形的面积来计算积分的值。
-     * </>
+     *     <li>无需传入参数</li>
+     *     <li>具体计算中，需要用到积分，这里我们用微元法，即用小矩形的面积来计算积分的值。</li>
+     * </ul>
+     * @return band which can get 90% power
      */
     public double getNinetyPercentBand(){
         //从-fi到fi上对功率谱积分应该等于0.9，band_n=2*fi
@@ -153,10 +154,10 @@ public class BPSK {
     /**
      * 求归一化（无限带宽上功率为1）后的30MHz频带内的发送功率
      * <ul>
-     *     <li>无需传入参数
-     *      @return 返回对-15MHz到15MHz区域上的积分值，得到总功率以便归一化
-     *     <li>具体计算中，设计到积分的计算用微元法
-     * </>
+     *     <li>无需传入参数</li>
+     *     <li>具体计算中，设计到积分的计算用微元法</li>
+     * </ul>
+     * @return 返回对-15MHz到15MHz区域上的积分值，得到总功率以便归一化
      */
     private double power_sender(){
         double value;
@@ -173,10 +174,10 @@ public class BPSK {
      * - 10 Log10[带内功率（归一化的）/1]  (dB)
      * 发射带宽为30MHz,接收带宽为24MHz损失的功率
      * <ul>
-     *     <li>无需传入参数
-     *      @return 带外损失功率
-     *     <li>具体计算中，设计到积分的计算用微元法
-     * </>
+     *     <li>无需传入参数</li>
+     *     <li>具体计算中，设计到积分的计算用微元法</li>
+     * </ul>
+     * @return 带外损失功率
      */
     public double band_loss(){
        double value;
@@ -195,12 +196,12 @@ public class BPSK {
     /**
      * 绘制BPSK的时域图像
      * <ul>
-     *     @param array 整型数组是由 1 和 -1 组成的双极性码，1表示高电平，-1表示低电平
-     *     <li>无需返回值
-     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性
-     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）
-     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
-     * </>
+     *     <li>无需返回值</li>
+     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性</li>
+     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）</li>
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。</li>
+     * </ul>
+     * @param array 整型数组是由 1 和 -1 组成的双极性码，1表示高电平，-1表示低电平
      */
     public void paint_time(int[] array){
         int k=array.length;
@@ -231,11 +232,11 @@ public class BPSK {
      * 绘制BPSK的自相关函数图像
      * 利用自相关函数和功率谱互为傅里叶正反变换
      * <ul>
-     *     <li>无需传入参数和返回值，用到的参数从本类中获取
-     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性
-     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）
-     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
-     * </>
+     *     <li>无需传入参数和返回值，用到的参数从本类中获取</li>
+     *     <li>具体方法是，生成一个javafx.scene.chart库中lineChart对象，设置其常用属性</li>
+     *     <li>再生成一个javafx.scene.chart库中XYChart对象，向其中添加（x，y）</li>
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。</li>
+     * </ul>
      */
     public void paint_self_correlation(){
         double a=0;
@@ -278,10 +279,10 @@ public class BPSK {
     /**
      * 计算带限剩余功率
      * <ul>
-     *     <li>无需传入参数
-     *      @return 带限剩余功率
-     *     <li>具体计算中，设计到积分的计算用微元法
-     * </>
+     *     <li>无需传入参数</li>
+     *     <li>具体计算中，设计到积分的计算用微元法</li>
+     * </ul>
+     * @return 带限剩余功率
      */
     public double getLimitedBandWidth() {
         double a = 0;
@@ -296,10 +297,10 @@ public class BPSK {
     /**
      * 计算均方根带宽
      * <ul>
-     *     <li>无需传入参数
-     *      @return 均方根带宽
-     *     <li>具体计算中，设计到积分的计算用微元法
-     * </>
+     *     <li>无需传入参数</li>
+     *     <li>具体计算中，设计到积分的计算用微元法</li>
+     * </ul>
+     * @return 均方根带宽
      */
     public double getRMSBand() {
         double b=0;
@@ -316,10 +317,10 @@ public class BPSK {
     /**
      * 计算与自身的频谱隔离系数
      * <ul>
-     *     <li>无需传入参数
-     *      @return 与自身的频谱隔离系数
-     *     <li>具体计算中，设计到积分的计算用微元法
-     * </>
+     *     <li>无需传入参数</li>
+     *     <li>具体计算中，设计到积分的计算用微元法</li>
+     * </ul>
+     * @return 与自身的频谱隔离系数
      */
     public double getFrequencyIsolationFactor() {
         double a = 0, b = 0, i = 0.05;
@@ -338,10 +339,10 @@ public class BPSK {
     /**
      * 计算与BPSK-1的频谱隔离系数
      * <ul>
-     *     <li>无需传入参数
-     *      @return 与BPSK1的频谱隔离系数
-     *     <li>具体计算中，设计到积分的计算用微元法
-     * </>
+     *     <li>无需传入参数</li>
+     *     <li>具体计算中，设计到积分的计算用微元法</li>
+     * </ul>
+     * @return 与BPSK1的频谱隔离系数
      */
     public double getFrequencyIsolationFactorBPSK1() {
         double a = 0, b = 0, i = 0.05;
@@ -360,10 +361,10 @@ public class BPSK {
     /**
      * 计算与BOC(10，5)的频谱隔离系数,fs=10*1.023,fc=5*1.023
      * <ul>
-     *     <li>无需传入参数
-     *      @return 与BOC(10,5)的频谱隔离系数
-     *     <li>具体计算中，设计到积分的计算用微元法
-     * </>
+     *     <li>无需传入参数</li>
+     *     <li>具体计算中，设计到积分的计算用微元法</li>
+     * </ul>
+     * @return 与BOC(10,5)的频谱隔离系数
      */
     public double getFrequencyIsolationFactorBOC105() {
         double value=0,i=0.05;
@@ -385,9 +386,9 @@ public class BPSK {
     /**
      * 计算有效矩形带宽
      * <ul>
-     *     <li>无需传入参数
-     *      @return 有效矩形带宽
-     * </>
+     *     <li>无需传入参数</li>
+     * </ul>
+     * @return 有效矩形带宽
      */
     public double getRectBand(){
         double b=0;
@@ -399,11 +400,11 @@ public class BPSK {
     /**
      * 计算BPSK四种重要性能参数
      * <ul>
-     *     <li>无需传入参数和返回值，用到的参数从本类中获取
-     *     <li>具体方法是，构造一个Chart_FourParas类对象，将4个参数传入
-     *     <li>生成一个javafx.scene.control中TableView对象，调用getTable()得到表格
-     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。
-     * </>
+     *     <li>无需传入参数和返回值，用到的参数从本类中获取</li>
+     *     <li>具体方法是，构造一个Chart_FourParas类对象，将4个参数传入</li>
+     *     <li>生成一个javafx.scene.control中TableView对象，调用getTable()得到表格</li>
+     *     <li>最后把添加了XYChart的linechart引用对象传入到图片保存的类中增加保存图片的功能。</li>
+     * </ul>
      */
     public void four_parameters(){
         Chart_FourParas p = new Chart_FourParas(this.getLimitedBandWidth(),this.getRMSBand(),
@@ -488,10 +489,278 @@ public class BPSK {
         Picture_save picture_save=new Picture_save(lineChart,"errorbpsk.png");
     }
 
-    /**
-     *
-     */
-    public void multipath_error(){
+    //把Tc!=0时计算多径误差包络的代码抽象出来
+    private double[] TcNoneZero(double a,double b,double c,double i,double smr,double Tc,double t,double br){
+        double result[]=new double[3];
+        for(double f = -(br/2); f >= -(br/2) && f <= (br/2); f = f + i){
+            a = a + Math.pow(10, -smr/20) *  m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                    / (pow(Math.PI * f, 2))  *
+                    Math.sin(Math.PI * f * Tc * 0.001) * Math.sin(2 * Math.PI * f * t * 0.001)* i ;
 
+            b = b + Math.PI * 2 * f * 1000000 *m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                    / (pow(Math.PI * f, 2))  *
+                    Math.sin(Math.PI * f * Tc * 0.001) * (1 + Math.pow(10, -smr/20)
+                    * Math.cos(2 * Math.PI * f * t * 0.001))* i ;
+
+            c = c + Math.PI * 2 * f * 1000000 * m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                    / (pow(Math.PI * f, 2))  *
+                    Math.sin(Math.PI * f * Tc * 0.001) * (1 - Math.pow(10, -smr/20)
+                    * Math.cos(2 * Math.PI * f * t * 0.001))* i ;
+        }
+        result[0]=a;
+        result[1]=b;
+        result[2]=c;
+        return result;
+    }
+
+    //把Tc=0时计算多径误差包络的代码抽象出来
+    private double[] TcEqualZero(double m,double a,double b,double c,double i,double smr,double Tc,double t,double br){
+        double result[]=new double[3];
+        for(double f = -(br/2); f >= -(br/2) && f <= (br/2); f = f + i){
+            a = a + Math.pow(10, -smr/20) *  m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                    / (pow(Math.PI * f, 2))  *
+                    f * Math.sin(2 * Math.PI * f * t * 0.001)* i ;
+
+            b = b + Math.PI * 2 * f * 1000000 * m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                    / (pow(Math.PI * f, 2))  *
+                    f * (1 + Math.pow(10, -smr/20)
+                    * Math.cos(2 * Math.PI * f * t * 0.001))* i ;
+
+            c = c + Math.PI * 2 * f * 1000000 * m * 1.023 * pow(Math.sin(Math.PI * f / (m * 1.023)), 2)
+                    / (pow(Math.PI * f, 2))  *
+                    f * (1 - Math.pow(10, -smr/20)
+                    * Math.cos(2 * Math.PI * f * t * 0.001))* i ;
+        }
+        result[0]=a;
+        result[1]=b;
+        result[2]=c;
+        return result;
+    }
+
+    /**
+     * 自定义的多径误差分析：根据输入的SMR和相关器间隔进行多径误差包络的绘制。
+     */
+    public void multipath_error(double smr, double Tc){
+        Stage stage = new Stage();
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final double i = 0.05;
+        xAxis.setLabel("多径延迟（m）");
+        yAxis.setLabel("多径误差包络（m）");
+        //creating the chart
+        final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+
+        lineChart.setCreateSymbols(false);
+
+        lineChart.setTitle("多径误差包络");
+        //defining a series
+        XYChart.Series<Number,Number> series1 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series2 = new XYChart.Series<>();
+        double a  = 0;
+        double b  = 0;
+        double c  = 0;
+        if(Tc != 0){
+
+            for(double t = 0; t <= 1400; t = t + 2){
+                double Result[]=TcNoneZero( a, b, c, i, smr, Tc, t,br);
+                b = Result[0]/Result[1];
+
+                series1.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+                c = -Result[0]/Result[2];
+                series2.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+                a = 0;
+                b = 0;
+                c = 0;
+            }
+        }
+        else{
+
+            for(double t = 0; t <= 1400; t = t + 2){
+                double Result[]=TcEqualZero(m, a, b, c, i, smr, Tc, t,br);
+                b = Result[0]/Result[1];
+
+                series1.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+                c =-Result[0]/Result[2];
+                series2.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+                a = 0;
+                b = 0;
+                c = 0;
+
+            }
+        }
+
+        lineChart.getData().addAll(series1, series2);
+        series1.nodeProperty().get().setStyle("-fx-stroke:IndianRed;");
+        series2.nodeProperty().get().setStyle("-fx-stroke:IndianRed;");
+        Picture_save picture_save = new Picture_save(lineChart, "multipath_boc.png");
+    }
+
+    /**
+     * 在接受带宽不同时对PSK-1的误差包络分析比较
+     */
+    public  void bandchange_multi(){
+        double Tc=0;
+        double smr=6;
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final double i = 0.05;
+        xAxis.setLabel("多径延迟（m）");
+        yAxis.setLabel("多径误差包络（m）");
+        //creating the chart
+        final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+
+        lineChart.setCreateSymbols(false);
+
+        lineChart.setTitle("不同接收带宽时多径误差包络");
+        //defining a series
+        XYChart.Series<Number,Number> series1 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series11 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series2 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series22 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series3 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series33 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series4= new XYChart.Series<>();
+        XYChart.Series<Number,Number> series44 = new XYChart.Series<>();
+        double a  = 0;
+        double b  = 0;
+        double c  = 0;
+
+        for(double t = 0; t <= 1400; t = t + 2){
+            double Result[]=TcEqualZero(1, a, b, c, i, smr, Tc, t,4.0);
+            b = Result[0]/Result[1];
+            series1.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+            c =-Result[0]/Result[2];
+            series11.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+
+        for(double t = 0; t <= 1400; t = t + 2){
+            double Result[]=TcEqualZero( 1,a, b, c, i, smr, Tc, t,8.0);
+            b = Result[0]/Result[1];
+            series2.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+            c =-Result[0]/Result[2];
+            series22.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+        for(double t = 0; t <= 1400; t = t + 2){
+            double Result[]=TcEqualZero(1, a, b, c, i, smr, Tc, t,16.0);
+            b = Result[0]/Result[1];
+            series3.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+            c =-Result[0]/Result[2];
+            series33.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+        for(double t = 0; t <= 1400; t = t + 2){
+            double Result[]=TcEqualZero(1, a, b, c, i, smr, Tc, t,30.0);
+            b = Result[0]/Result[1];
+            series4.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+            c =-Result[0]/Result[2];
+            series44.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+
+        lineChart.getData().addAll(series1, series11,series2,series22,series3,series33,series4,series44);
+        series1.nodeProperty().get().setStyle("-fx-stroke:Violet;");
+        series11.nodeProperty().get().setStyle("-fx-stroke:Violet;");
+        series2.nodeProperty().get().setStyle("-fx-stroke:SpringGreen;");
+        series22.nodeProperty().get().setStyle("-fx-stroke:SpringGreen;");
+        series3.nodeProperty().get().setStyle("-fx-stroke:MediumBlue;");
+        series33.nodeProperty().get().setStyle("-fx-stroke:MediumBlue;");
+        series4.nodeProperty().get().setStyle("-fx-stroke:OrangeRed;");
+        series44.nodeProperty().get().setStyle("-fx-stroke:OrangeRed;");
+        Picture_save picture_save = new Picture_save(lineChart, "bandmultipath_bpsk.png");
+    }
+
+    public void changeTc_multi(){
+        double smr=6;
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final double i = 0.05;
+        xAxis.setLabel("多径延迟（m）");
+        yAxis.setLabel("多径误差包络（m）");
+        //creating the chart
+        final LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+
+        lineChart.setCreateSymbols(false);
+
+        lineChart.setTitle("不同接收带宽时多径误差包络");
+        //defining a series
+        XYChart.Series<Number,Number> series1 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series11 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series2 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series22 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series3 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series33 = new XYChart.Series<>();
+        XYChart.Series<Number,Number> series4= new XYChart.Series<>();
+        XYChart.Series<Number,Number> series44 = new XYChart.Series<>();
+        double a  = 0;
+        double b  = 0;
+        double c  = 0;
+
+        for(double t = 0; t <= 1400; t = t + 2){
+            double Result[]=TcNoneZero( a, b, c, i, smr, 98, t,24);
+            b = Result[0]/Result[1];
+            series1.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+            c =-Result[0]/Result[2];
+            series11.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+
+        for(double t = 0; t <= 1400; t = t + 2){
+            double Result[]=TcNoneZero( a, b, c, i, smr, 49, t,24);
+            b = Result[0]/Result[1];
+            series2.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+            c =-Result[0]/Result[2];
+            series22.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+        for(double t = 0; t <= 1400; t = t + 2){
+            double Result[]=TcNoneZero( a, b, c, i, smr, 24, t,24);
+            b = Result[0]/Result[1];
+            series3.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+            c =-Result[0]/Result[2];
+            series33.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+        for(double t = 0; t <= 1400; t = t + 2){
+            double Result[]=TcNoneZero( a, b, c, i, smr, 1, t,24);
+            b = Result[0]/Result[1];
+            series4.getData().add(new XYChart.Data(t * 0.3, b * 3 * Math.pow(10, 8)));
+            c =-Result[0]/Result[2];
+            series44.getData().add(new XYChart.Data(t * 0.3, c * 3 * Math.pow(10, 8)));
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+        lineChart.getData().addAll(series1, series11,series2,series22,series3,series33,series4,series44);
+        series1.nodeProperty().get().setStyle("-fx-stroke:Violet;");
+        series1.setName("δ->0");
+        series11.nodeProperty().get().setStyle("-fx-stroke:Violet;");
+        series11.setName("  ");
+        series2.setName("δ=1/20");
+        series2.nodeProperty().get().setStyle("-fx-stroke:SpringGreen;");
+        series22.setName("  ");
+        series22.nodeProperty().get().setStyle("-fx-stroke:SpringGreen;");
+        series3.nodeProperty().get().setStyle("-fx-stroke:MediumBlue;");
+        series3.setName("δ=1/40");
+        series33.nodeProperty().get().setStyle("-fx-stroke:MediumBlue;");
+        series33.setName("δ=1/10");
+        series4.nodeProperty().get().setStyle("-fx-stroke:OrangeRed;");
+        series44.nodeProperty().get().setStyle("-fx-stroke:OrangeRed;");
+        Picture_save picture_save = new Picture_save(lineChart, "Tcmultipath_bpsk.png");
     }
 }
