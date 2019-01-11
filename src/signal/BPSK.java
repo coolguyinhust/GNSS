@@ -812,6 +812,11 @@ public class BPSK {
         Picture_save picture_save = new Picture_save(lineChart, "bpsk_wave.png");
     }
 
+    /**
+     * BPSK的滑动平均多径误差包络图绘制
+     * @param smr
+     * @param Tc
+     */
     public void slip_bpsk(double smr, double Tc) {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
